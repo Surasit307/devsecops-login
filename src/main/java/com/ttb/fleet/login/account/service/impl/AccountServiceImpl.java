@@ -122,7 +122,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override //Logout
     public Map<String,Object> userlogout(LogoutIn logoutIn) throws Exception {
-        //Query findBy Function
         Login login = loginRepository.findLoginByLoginId(logoutIn.getLoginId());
         if(login == null) {
         	return null;
@@ -140,7 +139,6 @@ public class AccountServiceImpl implements AccountService {
     
     @Override //New password
     public Map<String,Object> newpass(NewpasswordIn newpasswordIn) throws Exception {
-        //Query findBy Function
         Account account = accountRepository.findByUsername(newpasswordIn.username);
         if(account == null) {
         	return null;
