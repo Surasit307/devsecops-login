@@ -2,7 +2,6 @@ package com.ttb.fleet.login.account.controller;
 
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ttb.fleet.login.account.dto.AccountIn;
+import com.ttb.fleet.login.account.dto.NewpasswordIn;
 import com.ttb.fleet.login.account.service.AccountService;
 import com.ttb.fleet.login.common.dto.ApiStatusOut;
 import com.ttb.fleet.login.common.dto.ResponseOut;
 import com.ttb.fleet.login.common.utils.StopWatch;
 import com.ttb.fleet.login.login.dto.LoginIn;
 import com.ttb.fleet.login.login.dto.LogoutIn;
-
-
 
 @RestController
 @CrossOrigin
@@ -51,13 +48,6 @@ public class AccountController {
 		ApiStatusOut apistatus = new ApiStatusOut();
 		ResponseOut response = new ResponseOut();
 		try {
-			/*if (body.getAccountId() == 0) { //Error ค่า AccountId = null
-                apistatus.setCode("E4001");
-                apistatus.setBusinessMessage("Require field missing");
-                apistatus.setDeveloperMessage("parameter account_id is missing");
-                response.setApiStatus(apistatus);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }*/
             if (body.getFirstname() == null || body.getFirstname() == "") { //Error ค่า Firstname = null
                 apistatus.setCode("E4002");
                 apistatus.setBusinessMessage("Require field missing");
@@ -267,6 +257,7 @@ public class AccountController {
 	          return ResponseEntity.status(HttpStatus.OK).body(response);
 	          
 	      } catch (Exception e) {
+	    	  e.printStackTrace();
 	          apistatus.setCode("E5000");
 	          apistatus.setBusinessMessage("Service Not Available");
 	          apistatus.setDeveloperMessage(e.getMessage());
@@ -329,6 +320,71 @@ public class AccountController {
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	      }
 	  }
+	  
+	  
+	  @PostMapping("/v1/newpassword") //New Password
+	  public ResponseEntity<ResponseOut> Newpassword(@RequestHeader Map<String, String> headers, 
+			  @RequestBody(required = false) NewpasswordIn body) {
+	      StopWatch watch = new StopWatch();
+	      ObjectMapper mapper = new ObjectMapper();
+	      logger.info(String.format("ValidLogin Controller Request Header: %s", headers.keySet().stream()
+	              .map(key -> key + ":" + headers.get(key))
+	              .collect(Collectors.joining(", ", "{", "}"))));
+	      
+	      ApiStatusOut apistatus = new ApiStatusOut();
+	      ResponseOut response = new ResponseOut();
+	      try {
+	    	  
+	          Map data = (Map<String, Object>) 	accountService.newpass(body);
+	          if(data == null){
+	              apistatus.setCode("E404");
+	              apistatus.setBusinessMessage("Data not found");
+	              apistatus.setDeveloperMessage("Data not found");
+	              response.setApiStatus(apistatus);
+	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	          }
+	          
+	            if (body.getUsername() == null) { //Error ค่า Username = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("Username Invalid");
+	                apistatus.setDeveloperMessage("parameter Username is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	          
+	            if (body.getPassword() == null) { //Error ค่า Password = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("Password Invalid");
+	                apistatus.setDeveloperMessage("parameter Password is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	            
+	            if (body.getNewpassword() == null) { //Error ค่า NewPassword = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("New Password Invalid");
+	                apistatus.setDeveloperMessage("parameter Newpassword is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	          apistatus.setCode("S0000");
+	          apistatus.setBusinessMessage("Change New Password Successful");
+	          apistatus.setDeveloperMessage("Success");
+	          response.setApiStatus(apistatus);
+	          response.setData(data);
+	          logger.info(String.format("Logout Controller Response: %s", mapper.writeValueAsString(response)));
+	          logger.info(String.format("Logout Controller elapse time %.4f seconds", watch.elapsedTime()));
+	          return ResponseEntity.status(HttpStatus.OK).body(response);
+	          
+	      } catch (Exception e) {
+	          apistatus.setCode("E5000");
+	          apistatus.setBusinessMessage("Service Not Available");
+	          apistatus.setDeveloperMessage(e.getMessage());
+	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	      }
+	  }
+	  
+	  
 }
   
 

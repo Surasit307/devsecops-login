@@ -1,19 +1,19 @@
-package com.ttb.fleet.login.login.dto;
+package com.ttb.fleet.login.account.dto;
 
 import java.io.Serializable;
-
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties
-public class LoginIn implements Serializable {
+public class NewpasswordIn implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@JsonProperty("username")
 	public String username;
 	@JsonProperty("password")
 	public String password;
-	
+	@JsonProperty("newpassword")
+	public String newpassword;
 	public String getUsername() {
 		return username;
 	}
@@ -26,20 +26,11 @@ public class LoginIn implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	public String getNewpassword() {
+		return newpassword;
 	}
-
-
+	public void setNewpassword(String newpassword) {
+		this.newpassword = newpassword;
+	}
 	
-	
-
-	
-
-	
-
-
-
-	
-	
-
-	
+}

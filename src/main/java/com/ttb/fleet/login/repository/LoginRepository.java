@@ -14,10 +14,6 @@ public interface LoginRepository extends JpaRepository<Login,Integer>{
 
 	Login findLoginByLoginId(Integer loginId);
 
-	//Login findLoginByUsername(String username);
+	Login findByUsername(String username);
 
-	//Native Query
-	///@Query(value = "select * from account u where u.username = ?1 " , nativeQuery = true) 
-	//Login findLoginByUsernameNative(String username);
-	
 }
