@@ -88,10 +88,8 @@ public class AccountServiceImpl implements AccountService {
         return result;
     }
 
-
     @Override //Login
     public Map<String,Object> userlogin(LoginIn loginIn) throws Exception {
-    	
     		Account account = accountRepository.findByUsername(loginIn.username);
     		Login login = loginRepository.findByUsername(loginIn.username);
     	if(loginIn.username.equals(account.username) && loginIn.password.equals(account.password)) {	
