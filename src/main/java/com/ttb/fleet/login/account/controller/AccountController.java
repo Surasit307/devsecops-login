@@ -26,6 +26,7 @@ import com.ttb.fleet.login.common.dto.ApiStatusOut;
 import com.ttb.fleet.login.common.dto.ResponseOut;
 import com.ttb.fleet.login.common.utils.StopWatch;
 import com.ttb.fleet.login.login.dto.LoginIn;
+import com.ttb.fleet.login.login.dto.LogoutIn;
 
 
 
@@ -50,6 +51,63 @@ public class AccountController {
 		ApiStatusOut apistatus = new ApiStatusOut();
 		ResponseOut response = new ResponseOut();
 		try {
+			/*if (body.getAccountId() == 0) { //Error ค่า AccountId = null
+                apistatus.setCode("E4001");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter account_id is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }*/
+            if (body.getFirstname() == null || body.getFirstname() == "") { //Error ค่า Firstname = null
+                apistatus.setCode("E4002");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter firstname is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getLastname() == null || body.getLastname() == "") { //Error ค่า Lastname = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter lastname is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getGender() == null || body.getGender() == "") { //Error ค่า Gender = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter gender is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getAddress() == null || body.getAddress() == "") { //Error ค่า Language = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter address is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getUsername() == null || body.getUsername() == "" ) { //Error ค่า Username = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter username is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getPassword() == null || body.getPassword() == "") { //Error ค่า Password = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter password is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (body.getEmail() == null || body.getEmail() == "") { //Error ค่า Email = null
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter email is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            
 			apistatus.setCode("S0000");
 			apistatus.setBusinessMessage("Create Data Successful");
 			apistatus.setDeveloperMessage("Success");
@@ -172,7 +230,6 @@ public class AccountController {
 	      
 	      ApiStatusOut apistatus = new ApiStatusOut();
 	      ResponseOut response = new ResponseOut();
-	      logger.info("test");
 	      try {
 	    	  
 	          Map data = (Map<String, Object>) 	accountService.userlogin(body);
@@ -184,6 +241,22 @@ public class AccountController {
 	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	          }
 	          
+	            if (body.getUsername() == null) { //Error ค่า Username = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("Username Invalid");
+	                apistatus.setDeveloperMessage("parameter username is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	            
+	            if (body.getPassword() == null) { //Error ค่า Username = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("Password Invalid");
+	                apistatus.setDeveloperMessage("parameter password is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	        	  
 	          apistatus.setCode("S0000");
 	          apistatus.setBusinessMessage("Login Successful");
 	          apistatus.setDeveloperMessage("Success");
@@ -201,7 +274,61 @@ public class AccountController {
 	      }
       
   }
-  
+	  
+	  @PostMapping("/v1/logout") //Logout
+	  public ResponseEntity<ResponseOut> AccessLogout(@RequestHeader Map<String, String> headers, 
+			  @RequestBody(required = false) LogoutIn body) {
+	      StopWatch watch = new StopWatch();
+	      ObjectMapper mapper = new ObjectMapper();
+	      logger.info(String.format("ValidLogin Controller Request Header: %s", headers.keySet().stream()
+	              .map(key -> key + ":" + headers.get(key))
+	              .collect(Collectors.joining(", ", "{", "}"))));
+	      
+	      ApiStatusOut apistatus = new ApiStatusOut();
+	      ResponseOut response = new ResponseOut();
+	      try {
+	    	  
+	          Map data = (Map<String, Object>) 	accountService.userlogout(body);
+	          if(data == null){
+	              apistatus.setCode("E404");
+	              apistatus.setBusinessMessage("Data not found");
+	              apistatus.setDeveloperMessage("Data not found");
+	              response.setApiStatus(apistatus);
+	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	          }
+	          
+	            if (body.getLoginId() == 0) { //Error ค่า LoginId = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("LoginId Invalid");
+	                apistatus.setDeveloperMessage("parameter logid_id is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }
+	            
+	            /*if (body.getUsername() == null) { //Error ค่า Username = null
+	                apistatus.setCode("E4003");
+	                apistatus.setBusinessMessage("Username Invalid");
+	                apistatus.setDeveloperMessage("parameter username is missing");
+	                response.setApiStatus(apistatus);
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	            }*/
+	        	  
+	          apistatus.setCode("S0000");
+	          apistatus.setBusinessMessage("Logout Successful");
+	          apistatus.setDeveloperMessage("Success");
+	          response.setApiStatus(apistatus);
+	          response.setData(data);
+	          logger.info(String.format("Logout Controller Response: %s", mapper.writeValueAsString(response)));
+	          logger.info(String.format("Logout Controller elapse time %.4f seconds", watch.elapsedTime()));
+	          return ResponseEntity.status(HttpStatus.OK).body(response);
+	          
+	      } catch (Exception e) {
+	          apistatus.setCode("E5000");
+	          apistatus.setBusinessMessage("Service Not Available");
+	          apistatus.setDeveloperMessage(e.getMessage());
+	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	      }
+	  }
 }
   
 

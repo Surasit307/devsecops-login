@@ -21,7 +21,7 @@ public class AccountIn implements Serializable {
 	@JsonProperty("address")
 	private String address;
 	@JsonProperty("username")
-	private String username;
+	public String username;
 	@JsonProperty("password")
 	private String password;
 	@JsonProperty("email")

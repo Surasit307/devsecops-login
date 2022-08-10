@@ -17,6 +17,7 @@ import com.ttb.fleet.login.account.service.AccountService;
 import com.ttb.fleet.login.entity.Account;
 import com.ttb.fleet.login.entity.Login;
 import com.ttb.fleet.login.login.dto.LoginIn;
+import com.ttb.fleet.login.login.dto.LogoutIn;
 import com.ttb.fleet.login.repository.AccountRepository;
 import com.ttb.fleet.login.repository.LoginRepository;
 
@@ -35,15 +36,14 @@ public class AccountServiceImpl implements AccountService {
 	private final Logger logger = LoggerFactory
 			.getLogger(com.ttb.fleet.login.account.controller.AccountController.class);
 
-    @Override //Create Message
+    @Override //Create Account
     public Map<String,Object> create(AccountIn accountIn) throws JsonProcessingException {
-        Account account = new Account();
-        //account.setAccountId(accountIn.getAccountId());
+    	Account account = new Account();
         account.setFirstname(accountIn.getFirstname());
         account.setLastname(accountIn.getLastname());
         account.setGender(accountIn.getGender());
         account.setAddress(accountIn.getAddress());
-        account.setUsername(accountIn.getFirstname());
+        account.setUsername(accountIn.getUsername());
         account.setPassword(accountIn.getPassword());
         account.setEmail(accountIn.getEmail());
         account.setEmail_validation(null);
@@ -55,8 +55,8 @@ public class AccountServiceImpl implements AccountService {
         String json = new Gson().toJson(account);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
+    	
     }
-    
     
     @Override //Read Account
     public Map<String,Object> read(int accountId) throws JsonProcessingException {
@@ -80,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
         account.setLastname(accountIn.getLastname());
         account.setGender(accountIn.getGender());
         account.setAddress(accountIn.getAddress());
-        account.setUsername(accountIn.getFirstname());
+        account.setUsername(accountIn.getUsername());
         account.setPassword(accountIn.getPassword());
         account.setEmail(accountIn.getEmail());
         account.setDate(new Timestamp(System.currentTimeMillis()));
@@ -107,16 +107,22 @@ public class AccountServiceImpl implements AccountService {
     public Map<String,Object> userlogin(LoginIn loginIn) throws JsonProcessingException {
     	
         Login login = new Login();
-        //logger.info("testA");
-    	//Account account = accountRepository.checkLogin(loginIn);
-    	//logger.info("testB");
-        
-       //Account account = new Account();
-    	//Account account = accountRepository.checkLogin(username , password);
-    	//if(username.equals(account.getUsername()) && password.equals(account.getPassword())) {
     	
-    	//Insert user_login
-        login.setUsername("user");
+        //Query findBy Function
+    	Account account = accountRepository.findByUsername(loginIn.username);
+    	
+        //Native Query
+    	//Account account = accountRepository.findUserByUsernameNative(loginIn.username);
+    	
+    	//JPQuery
+    	//Account account = accountRepository.findUserByUsernameParam(loginIn.username);
+    	
+    	if(loginIn.username.equals(account.username) && loginIn.password.equals(account.password)) {
+    	//Login login = loginRepository.findLoginByUsernameNative(loginIn.username);
+    	//if(loginIn.username.equals(login.username)) {
+    	//Insert login
+    	login.setLoginId(login.loginId);
+        login.setUsername(loginIn.username);
         login.setStatus_login("online");
         login.setToken(null);
         login.setDate(new Timestamp(System.currentTimeMillis()));
@@ -125,12 +131,31 @@ public class AccountServiceImpl implements AccountService {
         String json = new Gson().toJson(login);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
+    		}		
     	//}
+    	return null;
+    }
+    @Override //Logout
+    public Map<String,Object> userlogout(LogoutIn logoutIn) throws JsonProcessingException {
     	
-		//return null;
+        //Query findBy Function
+        Login login = loginRepository.findLoginByLoginId(logoutIn.getLoginId());
+        if(login == null) {
+        	return null;
+        }
+    	//Insert user_login
+        login.setLoginId(logoutIn.getLoginId());
+        //login.setUsername(logoutIn.username);
+        login.setStatus_login("offline");
+        login.setToken(null);
+        login.setDate(new Timestamp(System.currentTimeMillis()));
     	
-		//return null;
- 
+        loginRepository.save(login);
+        String json = new Gson().toJson(login);
+        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
+        return result;
    
     }
+    
+    
 }

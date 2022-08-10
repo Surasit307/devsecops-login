@@ -10,9 +10,14 @@ import com.ttb.fleet.login.login.dto.LoginIn;
 
 @Repository
 public interface LoginRepository extends JpaRepository<Login,Integer>{
+
+
+	Login findLoginByLoginId(Integer loginId);
+
+	//Login findLoginByUsername(String username);
+
+	//Native Query
+	///@Query(value = "select * from account u where u.username = ?1 " , nativeQuery = true) 
+	//Login findLoginByUsernameNative(String username);
 	
-	//@Query("select * from personDB.account where username = username AND password = password")
-	//Login LoginByUsernameAndPassword(String username , String password);
-	
-		//Login checkLogin(LoginIn loginIn);
 }

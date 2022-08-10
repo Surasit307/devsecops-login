@@ -19,31 +19,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Table(name = "account")
 public class Account {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Integer accountId;
-    //@Column(name ="firstname")
 	private String firstname;
-	//@Column(name ="lastname")
 	private String lastname;
-	//@Column(name ="gender")
 	private String gender;
-	//@Column(name ="address")
 	private String address;
-	//@Column(name ="username")
-	private String username;
-	//@Column(name ="password")
-	private String password;
-	//@Column(name ="email")
+	public String username;
+	public String password;
 	private String email;
-	//@Column(name ="email_validation")
 	private String email_validation;
-	//@Column(name ="newpassword")
 	private String newpassword;
-    //@Column(name ="date")
 	private Timestamp date;
 	
 	public Integer getAccountId() {

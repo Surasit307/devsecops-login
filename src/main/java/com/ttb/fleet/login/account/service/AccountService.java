@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ttb.fleet.login.account.dto.AccountIn;
 import com.ttb.fleet.login.login.dto.LoginIn;
+import com.ttb.fleet.login.login.dto.LogoutIn;
 
 @Service
 public interface AccountService {
@@ -19,8 +20,9 @@ public interface AccountService {
 
 	Map<String, Object> delete(int accountId) throws JsonProcessingException;
 
-
 	Map<String, Object> userlogin(LoginIn loginIn) throws JsonProcessingException;
+
+	Map<String, Object> userlogout(LogoutIn logoutIn) throws JsonProcessingException;
 
 
 }

@@ -20,8 +20,8 @@ public class Login {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer loginId;
-	private String username;
+	public Integer loginId;
+	public String username;
 	private String status_login;
 	private Timestamp token;
 	private Timestamp date;

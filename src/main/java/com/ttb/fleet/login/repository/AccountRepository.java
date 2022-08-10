@@ -15,11 +15,18 @@ public interface AccountRepository extends JpaRepository<Account,Integer>{
 
 	Account findAccountByAccountId(Integer accountId);
 
-	//Account checkLogin(String username, String password);
+	
+	//Native Query
+	//@Query(value = "select * from account u where u.username = ?1 " , nativeQuery = true) 
+	//Account findUserByUsernameNative(String username);
+	
+	//JpQuery
+	//@Query(value = "select u from account u where u.username = :username ") 
+	//Account findUserByUsernameParam(@Param("username") String username);
+	
+	//function findBy 
+	public Account findByUsername(String username);
 
-	//@Query(value = "select * from account where username = :username " ,nativeQuery = true) 
-	//Account checkLogin(String username,String password);
 
-	//Account checkLogin(LoginIn loginIn);
 
 }
