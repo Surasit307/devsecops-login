@@ -152,14 +152,12 @@ public class AccountServiceImpl implements AccountService {
        // Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
         
        if(newpasswordIn.username.equals(account.username) && newpasswordIn.password.equals(account.password)) {
-        	if(account != null) {
 		        account.setPassword(newpasswordIn.newpassword);
 		        account.setNewpassword(newpasswordIn.newpassword);
 		        accountRepository.save(account);
 		        String json = new Gson().toJson(account);
 		        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
 		        return result;    
-        	}
        }
        return null;
        
@@ -169,7 +167,8 @@ public class AccountServiceImpl implements AccountService {
     @Override //Change password
     public Map<String,Object> changepass(NewpasswordIn newpasswordIn) throws Exception {
     	//Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
-	
+    	Account account = accountRepository.findByUsername(newpasswordIn.username);
+    if(newpasswordIn.username.equals(account.username) && newpasswordIn.password.equals(account.password)) {
    	Change_Password changepass = new Change_Password();
     changepass.setUsername(newpasswordIn.getUsername());
    	changepass.setPassword(newpasswordIn.getPassword());
@@ -181,7 +180,8 @@ public class AccountServiceImpl implements AccountService {
     Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
     return result;
     }
-//    
+    return null;
+    }
     
 }
 
