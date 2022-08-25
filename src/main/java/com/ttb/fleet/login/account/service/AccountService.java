@@ -27,5 +27,7 @@ public interface AccountService {
 
 	Map<String, Object> newpass(NewpasswordIn newpasswordIn) throws Exception;
 
+	Map<String, Object> changepass(NewpasswordIn newpasswordIn) throws Exception;
+
 
 }

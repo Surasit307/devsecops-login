@@ -13,11 +13,14 @@ import com.google.gson.Gson;
 import com.ttb.fleet.login.account.dto.AccountIn;
 import com.ttb.fleet.login.account.dto.NewpasswordIn;
 import com.ttb.fleet.login.account.service.AccountService;
+import com.ttb.fleet.login.common.dto.ResponseOut;
 import com.ttb.fleet.login.entity.Account;
+import com.ttb.fleet.login.entity.Change_Password;
 import com.ttb.fleet.login.entity.Login;
 import com.ttb.fleet.login.login.dto.LoginIn;
 import com.ttb.fleet.login.login.dto.LogoutIn;
 import com.ttb.fleet.login.repository.AccountRepository;
+import com.ttb.fleet.login.repository.ChangePassRepository;
 import com.ttb.fleet.login.repository.LoginRepository;
 
 @Service
@@ -27,6 +30,10 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepository;
     @Autowired
     private LoginRepository loginRepository;
+    
+    @Autowired
+    private ChangePassRepository changepassRepository;
+    
 	private final Logger logger = LoggerFactory
 			.getLogger(com.ttb.fleet.login.account.controller.AccountController.class);
 
@@ -119,14 +126,16 @@ public class AccountServiceImpl implements AccountService {
     	}
     	return null;
     }
+    	
 
     @Override //Logout
     public Map<String,Object> userlogout(LogoutIn logoutIn) throws Exception {
-        Login login = loginRepository.findLoginByLoginId(logoutIn.getLoginId());
-        if(login == null) {
+        //Login login = loginRepository.findLoginByLoginId(logoutIn.getLoginId());
+    	 Login login = loginRepository.findByUsername(logoutIn.username);       
+    	 if(login == null) {
         	return null;
         }
-        login.setLoginId(logoutIn.getLoginId());
+        login.setLoginId(login.getLoginId());
         login.setStatus_login("offline");
         login.setToken(null);
         login.setDate(new Timestamp(System.currentTimeMillis()));
@@ -134,22 +143,47 @@ public class AccountServiceImpl implements AccountService {
         String json = new Gson().toJson(login);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
-   
+
     }
     
     @Override //New password
     public Map<String,Object> newpass(NewpasswordIn newpasswordIn) throws Exception {
         Account account = accountRepository.findByUsername(newpasswordIn.username);
-        if(account == null) {
-        	return null;
-        }
-        account.setPassword(newpasswordIn.newpassword);
-        account.setNewpassword(newpasswordIn.newpassword);
-        accountRepository.save(account);
-        String json = new Gson().toJson(account);
-        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
-        return result;
-   
+       // Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
+        
+       if(newpasswordIn.username.equals(account.username) && newpasswordIn.password.equals(account.password)) {
+        	if(account != null) {
+		        account.setPassword(newpasswordIn.newpassword);
+		        account.setNewpassword(newpasswordIn.newpassword);
+		        accountRepository.save(account);
+		        String json = new Gson().toJson(account);
+		        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
+		        return result;    
+        	}
+       }
+       return null;
+       
+   }
+    
+    
+    @Override //Change password
+    public Map<String,Object> changepass(NewpasswordIn newpasswordIn) throws Exception {
+    	//Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
+	
+   	Change_Password changepass = new Change_Password();
+    changepass.setUsername(newpasswordIn.getUsername());
+   	changepass.setPassword(newpasswordIn.getPassword());
+   	changepass.setNewpassword(newpasswordIn.getNewpassword());
+   	changepass.setVersion(1);
+   	changepass.setCreate_date(new Timestamp(System.currentTimeMillis()));
+   	changepassRepository.save(changepass);
+    String json = new Gson().toJson(changepass);
+    Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
+    return result;
     }
+//    
     
 }
+
+
+

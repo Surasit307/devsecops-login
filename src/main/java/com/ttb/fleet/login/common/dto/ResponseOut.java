@@ -14,7 +14,8 @@ public class ResponseOut implements Serializable {
     @JsonProperty("api_status")
     private ApiStatusOut apiStatus = new ApiStatusOut();
     private transient Map<String, Object> data = new HashMap<>();
-
+    private transient Map<String, Object> data2 = new HashMap<>();
+    
     public ApiStatusOut getApiStatus() {
         return apiStatus;
     }
@@ -30,4 +31,12 @@ public class ResponseOut implements Serializable {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
+
+	public Map<String, Object> getData2() {
+		return data2;
+	}
+
+	public void setData2(Map<String, Object> data2) {
+		this.data2 = data2;
+	}
 }

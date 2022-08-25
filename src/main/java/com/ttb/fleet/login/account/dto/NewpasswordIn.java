@@ -14,6 +14,7 @@ public class NewpasswordIn implements Serializable {
 	public String password;
 	@JsonProperty("newpassword")
 	public String newpassword;
+
 	public String getUsername() {
 		return username;
 	}

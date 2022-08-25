@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ttb.fleet.login.account.dto.AccountIn;
 import com.ttb.fleet.login.account.dto.NewpasswordIn;
@@ -28,12 +31,13 @@ import com.ttb.fleet.login.login.dto.LoginIn;
 import com.ttb.fleet.login.login.dto.LogoutIn;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/api")
 public class AccountController {
 	
 	@Autowired
 	private AccountService accountService;
+	
 	
 	private final Logger logger = LoggerFactory
 			.getLogger(com.ttb.fleet.login.account.controller.AccountController.class);
@@ -139,6 +143,7 @@ public class AccountController {
           response.setData(data);
           logger.info(String.format("ReadAccount Controller Response: %s", mapper.writeValueAsString(response)));
           logger.info(String.format("ReadAccount Controller elapse time %.4f seconds", watch.elapsedTime()));
+          logger.info("test");
           return ResponseEntity.status(HttpStatus.OK).body(response);
       } catch (Exception e) {
           apistatus.setCode("E5000");
@@ -221,16 +226,16 @@ public class AccountController {
 	      ApiStatusOut apistatus = new ApiStatusOut();
 	      ResponseOut response = new ResponseOut();
 	      try {
-	    	  
 	          Map data = (Map<String, Object>) 	accountService.userlogin(body);
+	          //Login login = new Login();
 	          if(data == null){
 	              apistatus.setCode("E404");
-	              apistatus.setBusinessMessage("Data not found");
-	              apistatus.setDeveloperMessage("Data not found");
+	              apistatus.setBusinessMessage("Password Invalid.");
+	              apistatus.setDeveloperMessage("Password Invalid.");
 	              response.setApiStatus(apistatus);
 	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	          }
-	          
+
 	            if (body.getUsername() == null) { //Error ค่า Username = null
 	                apistatus.setCode("E4003");
 	                apistatus.setBusinessMessage("Username Invalid");
@@ -239,13 +244,14 @@ public class AccountController {
 	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	            }
 	            
-	            if (body.getPassword() == null) { //Error ค่า Username = null
+	            if (body.getPassword() == null) { //Error ค่า Password = null
 	                apistatus.setCode("E4003");
 	                apistatus.setBusinessMessage("Password Invalid");
 	                apistatus.setDeveloperMessage("parameter password is missing");
 	                response.setApiStatus(apistatus);
 	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	            }
+	            
 	        	  
 	          apistatus.setCode("S0000");
 	          apistatus.setBusinessMessage("Login Successful");
@@ -257,12 +263,14 @@ public class AccountController {
 	          return ResponseEntity.status(HttpStatus.OK).body(response);
 	          
 	      } catch (Exception e) {
-	    	  e.printStackTrace();
+	    	  //e.printStackTrace();
 	          apistatus.setCode("E5000");
-	          apistatus.setBusinessMessage("Service Not Available");
-	          apistatus.setDeveloperMessage(e.getMessage());
+	          apistatus.setBusinessMessage("Your username or password is inccorect");
+	          apistatus.setDeveloperMessage("parameter Username is null");
+	          response.setApiStatus(apistatus);
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	      }
+	    
       
   }
 	  
@@ -277,9 +285,12 @@ public class AccountController {
 	      
 	      ApiStatusOut apistatus = new ApiStatusOut();
 	      ResponseOut response = new ResponseOut();
+	      
+
 	      try {
 	    	  
 	          Map data = (Map<String, Object>) 	accountService.userlogout(body);
+	         
 	          if(data == null){
 	              apistatus.setCode("E404");
 	              apistatus.setBusinessMessage("Data not found");
@@ -288,21 +299,21 @@ public class AccountController {
 	              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	          }
 	          
-	            if (body.getLoginId() == 0) { //Error ค่า LoginId = null
+	            /*if (body.getLoginId() == 0) { //Error ค่า LoginId = null
 	                apistatus.setCode("E4003");
 	                apistatus.setBusinessMessage("LoginId Invalid");
 	                apistatus.setDeveloperMessage("parameter logid_id is missing");
 	                response.setApiStatus(apistatus);
 	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-	            }
+	            }*/
 	            
-	            /*if (body.getUsername() == null) { //Error ค่า Username = null
+	            if (body.getUsername() == null) { //Error ค่า Username = null
 	                apistatus.setCode("E4003");
 	                apistatus.setBusinessMessage("Username Invalid");
 	                apistatus.setDeveloperMessage("parameter username is missing");
 	                response.setApiStatus(apistatus);
 	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-	            }*/
+	            }
 	        	  
 	          apistatus.setCode("S0000");
 	          apistatus.setBusinessMessage("Logout Successful");
@@ -333,9 +344,11 @@ public class AccountController {
 	      
 	      ApiStatusOut apistatus = new ApiStatusOut();
 	      ResponseOut response = new ResponseOut();
+	     
 	      try {
 	    	  
 	          Map data = (Map<String, Object>) 	accountService.newpass(body);
+	          Map data2 = (Map<String, Object>) accountService.changepass(body);
 	          if(data == null){
 	              apistatus.setCode("E404");
 	              apistatus.setBusinessMessage("Data not found");
@@ -372,6 +385,7 @@ public class AccountController {
 	          apistatus.setDeveloperMessage("Success");
 	          response.setApiStatus(apistatus);
 	          response.setData(data);
+	          response.setData2(data2);
 	          logger.info(String.format("Logout Controller Response: %s", mapper.writeValueAsString(response)));
 	          logger.info(String.format("Logout Controller elapse time %.4f seconds", watch.elapsedTime()));
 	          return ResponseEntity.status(HttpStatus.OK).body(response);
