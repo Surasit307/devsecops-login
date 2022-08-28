@@ -348,7 +348,7 @@ public class AccountController {
 	      try {
 	    	  
 	          Map data = (Map<String, Object>) 	accountService.newpass(body);
-	          Map data2 = (Map<String, Object>) accountService.changepass(body);
+	          
 	          if(data == null){
 	              apistatus.setCode("E404");
 	              apistatus.setBusinessMessage("Data not found");
@@ -380,6 +380,7 @@ public class AccountController {
 	                response.setApiStatus(apistatus);
 	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	            }
+	          Map data2 = (Map<String, Object>) accountService.changepass(body);
 	          apistatus.setCode("S0000");
 	          apistatus.setBusinessMessage("Change New Password Successful");
 	          apistatus.setDeveloperMessage("Success");
@@ -391,10 +392,12 @@ public class AccountController {
 	          return ResponseEntity.status(HttpStatus.OK).body(response);
 	          
 	      } catch (Exception e) {
+	    	  e.printStackTrace();
 	          apistatus.setCode("E5000");
 	          apistatus.setBusinessMessage("Service Not Available");
 	          apistatus.setDeveloperMessage(e.getMessage());
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	          
 	      }
 	  }
 	  

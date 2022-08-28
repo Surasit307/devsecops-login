@@ -32,8 +32,6 @@ public class Account {
 	public String password;
 	private String email;
 	private String email_validation;
-	public String newpassword;
-	//private String oldpassword;
 	private Timestamp date;
 	
 	public Integer getAccountId() {
@@ -90,18 +88,7 @@ public class Account {
 	public void setEmail_validation(String email_validation) {
 		this.email_validation = email_validation;
 	}
-	public String getNewpassword() {
-		return newpassword;
-	}
-	public void setNewpassword(String newpassword) {
-		this.newpassword = newpassword;
-	}
-	/*public String getOldpassword() {
-		return oldpassword;
-	}
-	public void setOldpassword(String oldpassword) {
-		this.oldpassword = oldpassword;
-	}*/
+	
 	public Timestamp getDate() {
 		return date;
 	}

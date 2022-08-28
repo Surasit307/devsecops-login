@@ -23,8 +23,8 @@ public class Change_Password {
 	public Integer change_id;
 	public String username;
 	public String password;
-	private String newpassword;
-	public int version;
+	public String newpassword;
+	public Integer version;
 	private Timestamp create_date;
 	
 	
@@ -54,10 +54,10 @@ public class Change_Password {
 		this.newpassword = newpassword;
 	}
 
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
-	public void setVersion(int version) {
+	public void setVersion(Integer version) {
 		this.version = version;
 	}
 	public Timestamp getCreate_date() {
@@ -66,7 +66,7 @@ public class Change_Password {
 	public void setCreate_date(Timestamp create_date) {
 		this.create_date = create_date;
 	}
-	
+
 
 	
 	

@@ -13,8 +13,8 @@ public class NewpasswordIn implements Serializable {
 	@JsonProperty("password")
 	public String password;
 	@JsonProperty("newpassword")
-	public String newpassword;
-
+	private String newpassword;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -34,4 +34,7 @@ public class NewpasswordIn implements Serializable {
 		this.newpassword = newpassword;
 	}
 	
+
+	
 }
+	

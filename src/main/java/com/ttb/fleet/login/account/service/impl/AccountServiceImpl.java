@@ -48,7 +48,6 @@ public class AccountServiceImpl implements AccountService {
         account.setPassword(accountIn.getPassword());
         account.setEmail(accountIn.getEmail());
         account.setEmail_validation(null);
-        account.setNewpassword(null);
         account.setDate(new Timestamp(System.currentTimeMillis()));
         
         accountRepository.save(account);
@@ -149,11 +148,8 @@ public class AccountServiceImpl implements AccountService {
     @Override //New password
     public Map<String,Object> newpass(NewpasswordIn newpasswordIn) throws Exception {
         Account account = accountRepository.findByUsername(newpasswordIn.username);
-       // Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
-        
        if(newpasswordIn.username.equals(account.username) && newpasswordIn.password.equals(account.password)) {
-		        account.setPassword(newpasswordIn.newpassword);
-		        account.setNewpassword(newpasswordIn.newpassword);
+		        account.setPassword(newpasswordIn.getNewpassword());
 		        accountRepository.save(account);
 		        String json = new Gson().toJson(account);
 		        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
@@ -163,27 +159,21 @@ public class AccountServiceImpl implements AccountService {
        
    }
     
-    
-    @Override //Change password
+	@Override //Change password
     public Map<String,Object> changepass(NewpasswordIn newpasswordIn) throws Exception {
-    	//Change_Password changepass = changepassRepository.findByUsername(newpasswordIn.username);
-    	Account account = accountRepository.findByUsername(newpasswordIn.username);
-    if(newpasswordIn.username.equals(account.username) && newpasswordIn.password.equals(account.password)) {
-   	Change_Password changepass = new Change_Password();
-    changepass.setUsername(newpasswordIn.getUsername());
-   	changepass.setPassword(newpasswordIn.getPassword());
-   	changepass.setNewpassword(newpasswordIn.getNewpassword());
-   	changepass.setVersion(1);
-   	changepass.setCreate_date(new Timestamp(System.currentTimeMillis()));
-   	changepassRepository.save(changepass);
-    String json = new Gson().toJson(changepass);
-    Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
-    return result;
-    }
-    return null;
-    }
-    
+    	Integer count = changepassRepository.countByUsername(newpasswordIn.username);
+    	//Insert Change Password
+    	Change_Password changepass = new Change_Password();
+        changepass.setUsername(newpasswordIn.getUsername());
+       	changepass.setPassword(newpasswordIn.getPassword());
+       	changepass.setNewpassword(newpasswordIn.getNewpassword());
+       	changepass.setVersion(count+1);
+       	changepass.setCreate_date(new Timestamp(System.currentTimeMillis()));
+       	changepassRepository.save(changepass);
+        String json = new Gson().toJson(changepass);
+        Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
+        return result;
+   }
+	
 }
-
-
 
